@@ -1,0 +1,25 @@
+version: '3'
+services:
+  thelounge:
+    image: thelounge/thelounge:3.0.0-pre.6
+    volumes:
+      - thelounge:/var/opt/thelounge
+      - ./config.js:/var/opt/thelounge/config.js
+  znc:
+    image: "znc:slim"
+    volumes:
+      - znc:/znc-data
+    ports:
+      - "6697:6697"
+  caddy:
+    image: "abiosoft/caddy:latest"
+    volumes:
+      - ./Caddyfile:/etc/Caddyfile
+      - caddy-certs:/root/.caddy
+    ports:
+      - "80:80"
+      - "443:443"
+volumes:
+  thelounge:
+  znc:
+  caddy-certs:

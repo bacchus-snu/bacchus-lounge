@@ -1,0 +1,35 @@
+(common) {
+    # Enable compression
+    gzip
+
+    # Strict security headers
+    header / {
+        Strict-Transport-Security "max-age=15768000"
+        X-XSS-Protection "1; mode=block"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+    }
+}
+
+olmeca.snucse.org {
+    import common
+
+    proxy /socket.io/ localhost:9000 {
+        transparent
+        websocket
+    }
+
+    proxy / localhost:9000 {
+        transparent
+        header_upstream Forwarded "for={remote}; host={host}; proto={scheme}"
+    }
+}
+
+znc.olmeca.snucse.org {
+    import common
+
+    proxy / localhost:8080 {
+        transparent
+        header_upstream Forwarded "for={remote}; host={host}; proto={scheme}"
+    }
+}
