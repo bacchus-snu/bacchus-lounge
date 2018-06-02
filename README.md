@@ -108,3 +108,72 @@ Docker-compose는 `apt` repository에도 있지만 버전이 낮기 때문에, r
     $ docker-compose -v
     docker-compose version 1.21.2, build a133471
     ```
+
+## Bacchus-lounge 띄우기
+
+Docker와 docker-compose를 잘 설치했다면 할 일이 많지는 않습니다.
+
+1. ZNC 설정 파일 생성
+
+    ```bash
+    docker-compose run znc --makeconf
+    ```
+
+    admin 유저네임과 비밀번호를 설정하고, 포트는 6697, ssl 켜고, 나머지는 default로 하고 network setting은 당장 하지 말고 znc를 당장 켜지도 않으면 됩니다.
+
+1. 띄우기!
+
+    ```bash
+    docker-compose up -d
+    ```
+
+    ZNC, thelounge, caddy의 환상적인 콜라보가 시작됩니다.
+
+## ZNC 설정
+
+ZNC에서 간단한 설정을 통해 8080 포트를 열어줘야 합니다.
+
+1. 6697 포트 tunneling 하기
+
+    먼저, local에서, 6697 포트를 ssh tunneling을 통해 접근해봅시다.
+
+    ```bash
+    local$ ssh -L 8080:localhost:6679 <host>
+    ```
+
+1. 접속하기
+
+    local의 웹 브라우저에서 `https://localhost:8080`으로 접속합시다.
+    잘 설정했다면 ZNC web interface로 접근이 됩니다. 설정해둔 admin 계정으로 접속합니다.
+
+    global settings에서, SSL, IPv6, IRC를 끈 8080번 포트를 열어줍니다. 이제 tunneling 없이 Caddyfile에서 설정한 주소로 ZNC web interface에 접근할 수 있습니다.
+
+## 유저 추가하기
+
+이전 olmeca 서비스보다 user를 추가하는 작업이 살짝 복잡해졌습니다.
+
+1. ZNC 유저 추가하기
+
+    ZNC web interface의 manage users에서, 유저를 추가하고, 이름과 비밀번호를 설정하고 네트워크에 접속시켜줍니다.
+
+1. thelounge 유저 추가하기
+
+    ```bash
+    docker-compose run thelounge thelounge add <username>
+    ```
+
+    비밀번호를 설정하고, 로그는 저장하지 않도록 설정합니다.
+
+1. thelounge로 접속하기
+
+    발급한 thelounge 계정으로 일단 접속합니다. 왼쪽 하단에 + 버튼을 통해 network를 추가합니다.
+    Nickname이나 Real name은 상관이 없지만, Username과 Password는 중요합니다.
+
+    Username은 `<ZNC의 username>/<ZNC에서 설정한 네트워크>` 가 되야 합니다.
+    예를 들면 `pbzweihander/UriIRC`
+
+    Password는 ZNC 계정의 비밀번호를 적어야합니다.
+
+    username와 password 둘 다 thelounge와 통일시켜놓으면 헷갈릴 일이 없습니다.
+
+    그리고 유저에게 이메일로 thelounge 및 ZNC 계정의 username과 password를 알려줍니다.
