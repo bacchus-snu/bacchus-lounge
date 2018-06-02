@@ -177,3 +177,21 @@ ZNC에서 간단한 설정을 통해 8080 포트를 열어줘야 합니다.
     username와 password 둘 다 thelounge와 통일시켜놓으면 헷갈릴 일이 없습니다.
 
     그리고 유저에게 이메일로 thelounge 및 ZNC 계정의 username과 password를 알려줍니다.
+
+## ZNC 인증서 업데이트하기
+
+ZNC의 web interface에 접속할 때나, 다른 IRC 클라이언트로 ZNC에 직접 접속할 때는 ZNC의 인증서를 사용하게 됩니다.
+하지만 당연히 이 인증서는 valid 하지 않습니다.
+
+그래서 caddy의 인증서를 대신 가져다 쓰는 방법을 쓰면 ZNC도 valid한 인증서를 쓸 수 있습니다.
+
+안타깝게도 caddy는 인증서를 알아서 재발급 받지만 그 새로 발급 받은 인증서를 ZNC에 물리는건 자동으로 해주지 않습니다.
+매달 직접 복사해줘야합니다.
+
+Docker의 volume에서 인증서를 복사하는 container는 `caddy-cert-to-znc`에 만들어 두었고 `docker-compose.yml`에도 등록해놓았습니다.
+
+그러므로 매달 caddy가 인증서를 재발급 받아서 ZNC의 인증서가 만료되면 다음 커맨드를 실행시켜 인증서를 복사해줘야합니다.
+
+```bash
+docker-compose run cert-copier
+```
