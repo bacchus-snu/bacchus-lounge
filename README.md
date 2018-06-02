@@ -138,7 +138,7 @@ ZNC에서 간단한 설정을 통해 8080 포트를 열어줘야 합니다.
     먼저, local에서, 6697 포트를 ssh tunneling을 통해 접근해봅시다.
 
     ```bash
-    local$ ssh -L 8080:localhost:6679 <host>
+    local$ ssh -L 8080:localhost:6697 <host>
     ```
 
 1. 접속하기
