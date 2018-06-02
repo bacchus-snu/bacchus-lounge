@@ -19,6 +19,14 @@ services:
     ports:
       - "80:80"
       - "443:443"
+  cert-copier:
+    build: caddy-cert-to-znc
+    volumes:
+      - caddy-certs:/caddy
+      - znc:/znc
+    depends_on:
+      - caddy
+      - znc
 volumes:
   thelounge:
   znc:
