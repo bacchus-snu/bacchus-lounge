@@ -5,12 +5,14 @@ services:
     volumes:
       - thelounge:/var/opt/thelounge
       - ./config.js:/var/opt/thelounge/config.js
+    restart: unless-stopped
   znc:
     image: "znc:slim"
     volumes:
       - znc:/znc-data
     ports:
       - "6697:6697"
+    restart: unless-stopped
   caddy:
     image: "abiosoft/caddy:latest"
     volumes:
@@ -19,6 +21,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    restart: unless-stopped
   cert-copier:
     build: caddy-cert-to-znc
     volumes:
